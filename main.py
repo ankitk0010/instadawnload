@@ -1,13 +1,14 @@
-from flask import Flask, request, jsonify,render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import instaloader 
 from instaloader import StoryItem
 import os
 import base64
 import time
-from threading import Thread
+from keep_alive import keep_alive
 
-app = Flask('')
+keep_alive()
+app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
 # sessionid ='8534509620%3AMcoENP0db3GVh5%3A6%3AAYeIrJjCraSOiDJNlhqDtRH5F3ol9YlkRkaPeewutw'
@@ -130,10 +131,5 @@ def download_media():
                 os.remove(os.path.join(shortcode or urls, file))
             os.rmdir(shortcode or urls)
 
-def run():
-  app.run(host='0.0.0.0', port=8080)
-
-
-def keep_alive():
-  t = Thread(target=run)
-  t.start()
+if __name__ == '__main__':
+    app.run(debug=True)
