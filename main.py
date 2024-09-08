@@ -12,8 +12,8 @@ CORS(app)  # This will enable CORS for all routes
 L = instaloader.Instaloader()
 
 # # Define your Instagram credentials
-username = 'softypatel97@gmail.com' | os.environ.get('token')
-password = 'Vinaykr@45' | os.environ.get('token')
+username =  os.environ.get('username')
+password =  os.environ.get('password')
 L.context.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 L.context.max_connection_attempts = 1
 # L.context._session.cookies.update({
