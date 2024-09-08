@@ -9,7 +9,7 @@ import time
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
-# sessionid ='8534509620%3AMcoENP0db3GVh5%3A6%3AAYeIrJjCraSOiDJNlhqDtRH5F3ol9YlkRkaPeewutw'
+sessionid ='8534509620%3A7dGSwJX5wV5D54%3A7%3AAYdCEUzJu2yYCTJUw9aW8ll54ep7C4M4S3gCw5cnqA'
 L = instaloader.Instaloader()
 
 # # Define your Instagram credentials
@@ -17,11 +17,11 @@ username =  os.environ.get('username')
 password =  os.environ.get('password')
 L.context.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 L.context.max_connection_attempts = 1
-# L.context._session.cookies.update({
-#     'sessionid': sessionid,
-#     'csrftoken': 'h0g4ZNuaLtZtpgsc3FYVA2Te1wHTl3Y8',  # Replace with your actual csrftoken
-#     'ds_user_id': '8534509620'    # Replace with your actual user ID
-# })
+L.context._session.cookies.update({
+    'sessionid': sessionid,
+    'csrftoken': 'pWPf4gf30Cj0dNJ8tlDnQVRJE5Hzdphd',  # Replace with your actual csrftoken
+    'ds_user_id': '8534509620'    # Replace with your actual user ID
+})
 
  # Save the session for future use
 
