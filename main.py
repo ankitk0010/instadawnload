@@ -5,9 +5,7 @@ from instaloader import StoryItem
 import os
 import base64
 import time
-from keep_alive import keep_alive
 
-keep_alive()
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
 
@@ -132,4 +130,5 @@ def download_media():
             os.rmdir(shortcode or urls)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Use the port provided by Render, or default to 5000 locally
+    app.run(host='0.0.0.0', port=port, debug=True)
