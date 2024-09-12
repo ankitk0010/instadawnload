@@ -35,28 +35,32 @@ def download_media():
         if not post_url:
             return jsonify({"error": "No URL provided"}), 400
 
-        # Extract the shortcode from the URL
-        shortcode = post_url.split("/")[-2]
-        urldetail = post_url.split("/")[-3]
-        check = post_url.split("/")[3]
         url = post_url.split("/")
         urls = None
-        if len(url)>6:
+        check = None
+        if len(url)>1:
+         urldetail = post_url.split("/")[-3]
+         check = post_url.split("/")[3]
+         if check=='p' or check=='reel' or check=='tv':
+           urls = post_url.split("/")[-2]
+         elif len(url)>6:
             urls = post_url.split("/")[5]
-        else:
-            urls = post_url.split("/")[4]    
+         else:
+            urls = post_url.split("/")[4]  
+        else: 
+            urls = url[0]  
         print(urls)
 
         
         # Find the media file (image or video)
         media_files = []
         # Download the post using Instaloader
-        if check!="stories": 
-            post = instaloader.Post.from_shortcode(L.context, shortcode)
-            L.download_post(post, target=shortcode)
+        if len(url)>1 and check!="stories": 
+            post = instaloader.Post.from_shortcode(L.context, urls)
+            L.download_post(post, target=urls)
             time.sleep(2)
-            for filename in os.listdir(shortcode):
-              file_path = os.path.join(shortcode, filename)
+            for filename in os.listdir(urls):
+              file_path = os.path.join(urls, filename)
               if urldetail!='reel' and filename.endswith('.jpg') or filename.endswith('.png'):
                 mimetype = "image/jpeg" if filename.endswith('.jpg') else "image/png"
               elif filename.endswith('.mp4'):
@@ -73,12 +77,13 @@ def download_media():
                  })
         else:
            try:
+            #  L.close()
              L.load_session
-             L.load_session_from_file(username)
+             L.load_session_from_file(username,session_file_path)
            except FileNotFoundError:
              print("Session file not found. Please log in first.")
              L.login(username, password)
-             L.save_session_to_file() 
+             L.save_session_to_file(session_file_path) 
            
            if urls.isnumeric():
             #   print('hi')
@@ -90,10 +95,9 @@ def download_media():
              profile = instaloader.Profile.from_username(L.context, urls)
              for story in L.get_stories(userids=[profile.userid]):
                 for story_item in story.get_items():
-                  L.download_storyitem(story_item, target=urls)
-                  time.sleep(2)
-                  print(f"Downloaded story item {story_item.date_utc}")
-                 
+                  L.download_storyitem(story_item, target=profile.username)
+                  time.sleep(2)  # Longer delay to avoid rate limit
+                        
            has_video = any(filename.endswith('.mp4') for filename in os.listdir(urls))
 
            for filename in os.listdir(urls):
@@ -101,8 +105,7 @@ def download_media():
                if filename.endswith('.mp4'):
                   mimetype = "video/mp4"
                elif not has_video and filename.endswith('.jpg') or filename.endswith('.png'):
-                  mimetype = "image/jpeg" if filename.endswith('.jpg') else "image/png"
-                  
+                  mimetype = "image/jpeg" if filename.endswith('.jpg') else "image/png"  
                else:
                   continue  # Skip non-media files
 
@@ -124,10 +127,10 @@ def download_media():
         return jsonify({"error": str(e)}), 500
     finally:
         # Clean up downloaded files
-        if os.path.exists(shortcode or urls):
-            for file in os.listdir(shortcode or urls):
-                os.remove(os.path.join(shortcode or urls, file))
-            os.rmdir(shortcode or urls)
+        if os.path.exists(urls):
+            for file in os.listdir(urls):
+                os.remove(os.path.join(urls, file))
+            os.rmdir(urls)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))  # Use the port provided by Render, or default to 5000 locally
