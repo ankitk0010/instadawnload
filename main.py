@@ -28,6 +28,7 @@ L.context._session.cookies.update({
 @app.route('/download', methods=['POST'])
 def download_media():
     try:
+        session_file_path = os.path.join(os.path.dirname(__file__), 'instaloader_session')
         # Get the Instagram post URL from the request
         data = request.get_json()
         post_url = data.get('url')
