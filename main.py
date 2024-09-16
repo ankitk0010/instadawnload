@@ -5,6 +5,7 @@ from instaloader import StoryItem
 import os
 import base64
 import time
+from moviepy.editor import VideoFileClip
 
 app = Flask(__name__)
 CORS(app)  # This will enable CORS for all routes
