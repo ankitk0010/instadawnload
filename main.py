@@ -32,26 +32,22 @@ def download_media():
             return jsonify({"error": "No URL provided"}), 400
 
         url = post_url.split("/")
-        urls = None
-        check = None
-        urldetail = post_url.split("/")[-3] if len(post_url.split("/")) >= 4 else None
-        check = post_url.split("/")[3] if len(post_url.split("/")) >= 4 else None
-        if check=='p' or check=='reel' or check=='tv':
-           urls = post_url.split("/")[-2]
-       
+        urldetail = post_url.split("/")[-3]
+        check = post_url.split("/")[3]
+        urls = post_url.split("/")[-2]
         print(urls)
 
         
         # Find the media file (image or video)
         media_files = []
         # Download the post using Instaloader
-        if len(url)>1 and check!="stories": 
-            post = instaloader.Post.from_shortcode(L.context, urls)
-            L.download_post(post, target=urls)
-            time.sleep(2)
-            for filename in os.listdir(urls):
+        # if len(url)>1 and check!="stories": 
+        post = instaloader.Post.from_shortcode(L.context, urls)
+        L.download_post(post, target=urls)
+        time.sleep(2)
+        for filename in os.listdir(urls):
               file_path = os.path.join(urls, filename)
-              if urldetail!='reel' and filename.endswith('.jpg') or filename.endswith('.png'):
+              if urldetail!='reel' and urldetail!='reels' and filename.endswith('.jpg') or filename.endswith('.png'):
                 mimetype = "image/jpeg" if filename.endswith('.jpg') else "image/png"
               elif filename.endswith('.mp4'):
                 mimetype = "video/mp4"
@@ -96,7 +92,8 @@ def download_audio():
         url = post_url.split("/")
         urls = post_url.split("/")[-2]
         check = post_url.split("/")[3]
-        if check != 'reels' and check != 'reel':
+        print(check)
+        if check!='reels' and check!='reel':
             return jsonify({"error": "URL is not a reel"}), 400
 
         # Download the reel video using Instaloader
