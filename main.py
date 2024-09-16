@@ -34,8 +34,8 @@ def download_media():
         url = post_url.split("/")
         urls = None
         check = None
-        urldetail = post_url.split("/")[-3]
-        check = post_url.split("/")[3]
+        urldetail = post_url.split("/")[-3] if len(post_url.split("/")) >= 4 else None
+        check = post_url.split("/")[3] if len(post_url.split("/")) >= 4 else None
         if check=='p' or check=='reel' or check=='tv':
            urls = post_url.split("/")[-2]
        
