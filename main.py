@@ -96,7 +96,7 @@ def download_audio():
         url = post_url.split("/")
         urls = post_url.split("/")[-2]
         check = post_url.split("/")[3]
-        if check != 'reels' or check != 'reel':
+        if check != 'reels' and check != 'reel':
             return jsonify({"error": "URL is not a reel"}), 400
 
         # Download the reel video using Instaloader
